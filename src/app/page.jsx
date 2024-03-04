@@ -1,23 +1,13 @@
-import Image from "next/image";
 import Link from "next/link"
 import galleryData from "../db/db.json"
+import GalleryItem from "@/components/GalleryItem";
 export default function Home() {
 
   return (
-    <main >
-      <Link href="/mona-lisa">hello </Link>
-      <div className=" ">
-      <Image src={"/assets/girl-with-pearl-earring/gallery.jpg"} width={310} height={500} ></Image>
-      </div>
-      <div className=" ">
-      <Image src={"/assets/girl-with-pearl-earring/gallery.jpg"} width={310} height={500} ></Image>
-      </div>
-      <div className=" ">
-      <Image src={"/assets/girl-with-pearl-earring/gallery.jpg"} width={310} height={500} ></Image>
-      </div>
-      <div className=" ">
-      <Image src={"/assets/girl-with-pearl-earring/gallery.jpg"} width={310} height={500} ></Image>
-      </div>
+    <main className="*:break-inside-avoid columns-[290px] gap-8 m-8 *:mb-4 max-w-[1536px] 2xl:mx-auto">
+      {galleryData.map(e => <Link href={e.src} key={`${e.id}-${e.src}`}>
+        <GalleryItem url={e.src} author={e.author} />
+      </Link>)}
     </main>
   );
 }
