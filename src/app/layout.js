@@ -20,7 +20,7 @@ const myFont = localFont({ src:
 },] })
 
 export const metadata = {
-  title: "Gallery Slishow",
+  title: "Galleria",
   description: "An application that showcases some of the most beautiful art in contemporary history",
 };
 

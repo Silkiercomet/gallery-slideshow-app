@@ -1,20 +1,44 @@
-import React from "react";
 import galleryData from "../../db/db.json";
 import Image from "next/image";
 import Link from "next/link";
-const getPiece = (src) => {
-  const data = galleryData.filter((e) => e.src === src);
-  return data[0];
-};
+import { getPiece, getNextAndAfter } from "@/utils";
+export async function generateMetadata({ params }, parent) {
+  const id = params.id;
+  const { background, date, author } = getPiece(id);
 
+  return {
+    title: id.replaceAll("-", " "),
+    description: background,
+    keywords: [author, date]
+  };
+}
 const index = ({ params }) => {
   const { id, background, date, author, wiki } = getPiece(params.id);
   const name = params.id.replaceAll("-", " ");
   let total = id > 0 ? 6.66 * (id + 1) : 6.66;
+  const [after, next] = getNextAndAfter(id)
 
   return (
     <>
       <main className="p-10 xl:grid xl:grid-cols-2 xl:place-items-center gap-8 xl:mt-10 max-w-[1440px] xl:mx-auto">
+        <input type="checkbox" name="modal" id="modal" className="hidden peer"/>
+        <div className="transition-all pointer-events-none grid peer-checked:pointer-events-auto peer-checked:opacity-100 opacity-0 fixed inset-0  place-items-center bg-[#030303d5] w-full h-full z-50">
+          <div className="max-w-[80%] md:max-w-[420px]">
+          <label htmlFor="modal" className="cursor-pointer text-white ml-auto leading-10 uppercase tracking-[1rem]">close</label>
+          <picture className="relative">
+            <source
+              media="(min-width: 720px)"
+              srcSet={`/assets/${params.id}/hero-large.jpg`}
+            />
+            <Image
+              src={`/assets/${params.id}/hero-small.jpg`}
+              width={600}
+              height={600}
+              alt={background}
+            />
+          </picture>
+          </div>
+        </div>
         <div className="relative max-w-[450px] mx-auto  xl:mr-32">
           <picture className="relative">
             <source
@@ -27,6 +51,7 @@ const index = ({ params }) => {
               height={600}
               alt={background}
             />
+            <label htmlFor="modal" className=" cursor-pointer absolute bottom-12 lg:bottom-4 left-4 text-white bg-[#03030362] transition-all hover:opacity-50 p-2 flex text-[10px] font-bold  items-center gap-2 uppercase"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><g fill="#FFF" fillRule="nonzero"><path d="M7.714 0l1.5 1.5-2.357 2.357 1.286 1.286L10.5 2.786l1.5 1.5V0zM3.857 6.857L1.5 9.214 0 7.714V12h4.286l-1.5-1.5 2.357-2.357zM8.143 6.857L6.857 8.143 9.214 10.5l-1.5 1.5H12V7.714l-1.5 1.5zM4.286 0H0v4.286l1.5-1.5 2.357 2.357 1.286-1.286L2.786 1.5z"/></g></svg>view image</label>
           </picture>
 
           <header className="grid gap-2 absolute bg-slate-50 p-4 bottom-[80px] min-w-[80%] max-w-[80%] lg:bottom-auto lg:top-0 lg:-right-3/4 xl:min-w-[20%] xl:-right-1/2 xl:p-8">
@@ -71,7 +96,7 @@ const index = ({ params }) => {
           <p className="text-[#696868]">{author}</p>
         </div>
         <div className="flex items-center gap-4 ">
-          <Link href={"/"}>
+          <Link href={`/${after}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24">
               <g stroke="#000" fill="none" fillRule="evenodd">
                 <path
@@ -82,7 +107,7 @@ const index = ({ params }) => {
               </g>
             </svg>
           </Link>
-          <Link href={"/"}>
+          <Link href={`/${next}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="24">
               <g stroke="#000" fill="none" fillRule="evenodd">
                 <path
